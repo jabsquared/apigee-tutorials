@@ -19,13 +19,13 @@ produces:
   - application/json
 x-a127-config: {}
 x-a127-services:
-  quota:     
+  quota:
     provider: volos-quota-memory
     options:
       timeUnit: minute
       interval: 1
       allow: 25
-  cache:     
+  cache:
       provider: volos-cache-memory
       options:
         name: hello-cache
@@ -34,7 +34,7 @@ paths:
   /hello:
     # binds a127 app logic to a route
     x-swagger-router-controller: hello_world
-    x-a127-apply: 
+    x-a127-apply:
       cache: {}
       quota: {}
 
@@ -59,8 +59,92 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /sears:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: sears
+    x-a127-apply:
+      cache: {}
+      quota: {}
+
+    get:
+      description: Returns information about a product
+      # used as the method name of the controller
+      operationId: getinfo
+      parameters:
+        - name: type
+          in: query
+          description: Type of SEARS API to quiery.
+          required: true
+          type: string
+        - name: cat
+          in: query
+          description: Product Catagory to search.
+          required: false
+          type: string
+        - name: keyword
+          in: query
+          description: Product Keyword to search for.
+          required: false
+          type: string
+        - name: prodnum
+          in: query
+          description: Product number.
+          required: false
+          type: string
+        - name: zipcode
+          in: query
+          description: Zipcode for used for location specific info.
+          required: false
+          type: string
+        - name: by
+          in: query
+          description: Speficy method used to search for store.
+          required: false
+          type: string
+        - name: city
+          in: query
+          description: City used for location specific info.
+          required: false
+          type: string
+        - name: state
+          in: query
+          description: State used for location specific info.
+          required: false
+          type: string
+        - name: lon
+          in: query
+          description: Longitude used for location specific info.
+          required: false
+          type: string
+        - name: lad
+          in: query
+          description: Laditude used for location specific info.
+          required: false
+          type: string
+        - name: distance
+          in: query
+          description: Distance area used to search for stores.
+          required: false
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/SearsResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 # complex objects have schema definitions
 definitions:
+  SearsResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
   HelloWorldResponse:
     required:
       - message
